@@ -6,8 +6,7 @@ for x = 1, grid_size do
       grid[x][y] = 1
    end
 end
---grid[2][4] = 2
---grid[6][5] = 2
+
 
 local grass = love.graphics.newImage("grass.png")
 local highlight = love.graphics.newImage("highlight.png")
@@ -28,7 +27,7 @@ hook.Add("load","Bounds",Bounds)
 
 local function Grid()	
 	--love.graphics.draw(background)
-	love.graphics.printf(camera.scaleX, 10, 10, 10 ,"left")
+	
 	
 	camera:set()
 	for x = 1,grid_size do
@@ -36,20 +35,22 @@ local function Grid()
 			if grid[x][y] == 1 then
 				local x1,y1 = x * block_width, y * block_depth
 				love.graphics.draw(grass, grid_x + x1, grid_y + y1)
-				--love.graphics.printf(x..","..y, x1+block_width/2, y1+block_depth/2, 1 ,"center")
+				--love.graphics.printf(x..","..y, grid_x + x1, grid_y + y1, 1 ,"center")
 			elseif grid[x][y] == 2 then
 				local x1,y1 = x * block_width, y * block_depth
 				love.graphics.draw(highlight, grid_x + x1, grid_y + y1)
-				--love.graphics.printf(x..","..y, x1+block_width/2, y1+block_depth/2, 1 ,"center")
+				love.graphics.printf(x..","..y, grid_x + x1, grid_y + y1, 1 ,"center")
 			end
 		end
 	end
 	camera:unset()
+	
+	love.graphics.printf(camera.scaleX, 10, 10, 10 ,"left")
 end
 hook.Add("draw","Grid",Grid)
 
 
-local speed = 400
+local speed = 800
 local function MoveGrid(dt)	
 	if love.keyboard.isDown('left') then
 		camera:move(-speed*dt)
