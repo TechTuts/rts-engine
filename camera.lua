@@ -83,3 +83,7 @@ function camera:draw()
 		camera:unset()
 	end
 end
+
+function camera:mousePosition()
+	return love.mouse.getX() * self.scaleX + self._x, love.mouse.getY() * self.scaleY + self._y
+end

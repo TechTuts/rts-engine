@@ -1,7 +1,7 @@
 RTS.unit = {}
 
 function RTS.unit:init()
-	local units = loveframes.util.GetDirectoryContents("units")
+	local units = GetDirectoryContents("units")
 	
 	for k, v in ipairs(units) do
 		if v.extension == "lua" then

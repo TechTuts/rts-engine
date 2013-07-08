@@ -1,5 +1,5 @@
 function love.conf(t)
-    t.title = "Perudo"        -- The title of the window the game is in (string)
+    t.title = "RTS"        -- The title of the window the game is in (string)
     t.author = "TechTuts"        -- The author of the game (string)
 
     t.console = false           -- Attach a console (boolean, Windows only)

@@ -79,3 +79,33 @@ function shuffled(tab)
 	for i=1,n do res[i] = tab[order[i].idx] end
 	return res
 end
+
+function GetDirectoryContents(dir, t)
+
+	local dir = dir
+	local t = t or {}
+	local files = love.filesystem.enumerate(dir)
+	local dirs = {}
+	
+	for k, v in ipairs(files) do
+		local isdir = love.filesystem.isDirectory(dir.. "/" ..v)
+		if isdir == true then
+			table.insert(dirs, dir.. "/" ..v)
+		else
+			local parts = string.Explode(v, "([.])") --loveframes.util.SplitString
+			local extension = parts[#parts]
+			parts[#parts] = nil
+			local name = table.concat(parts)
+			table.insert(t, {path = dir, fullpath = dir.. "/" ..v, requirepath = dir .. "." ..name, name = name, extension = extension})
+		end
+	end
+	
+	if #dirs > 0 then
+		for k, v in ipairs(dirs) do
+			t = loveframes.util.GetDirectoryContents(v, t)
+		end
+	end
+	
+	return t
+	
+end

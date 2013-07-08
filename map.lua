@@ -1,7 +1,7 @@
 RTS.map = {}
 
 function RTS.map:init()
-	local maps = loveframes.util.GetDirectoryContents("maps")
+	local maps = GetDirectoryContents("maps")
 	
 	for k, v in ipairs(maps) do
 		if v.extension == "lua" then
