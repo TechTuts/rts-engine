@@ -29,3 +29,6 @@ end
 unit.__index=unit
 
 setmetatable(RTS.unit, unit)
+
+
+RTS.unit:init()

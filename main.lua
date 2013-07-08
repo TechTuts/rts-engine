@@ -8,5 +8,3 @@ require("map")
 require("menu")
 require("building")
 require("unit")
-
-RTS.unit:init()
