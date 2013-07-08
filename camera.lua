@@ -5,6 +5,10 @@ camera.scaleX = 1
 camera.scaleY = 1
 camera.rotation = 0
  
+ function math.clamp(x, min, max)
+  return x < min and min or (x > max and max or x)
+end
+ 
 function camera:set()
 	love.graphics.push()
 	love.graphics.rotate(-self.rotation)
@@ -17,8 +21,8 @@ function camera:unset()
 end
  
 function camera:move(dx, dy)
-	self._x = self._x + (dx or 0)
-	self._y = self._y + (dy or 0)
+	camera:setX(self._x + (dx or 0))
+	camera:setY(self._y + (dy or 0))
 end
  
 function camera:rotate(dr)
@@ -27,8 +31,15 @@ end
  
 function camera:scale(sx, sy)
 	sx = sx or 1
-	self.scaleX = self.scaleX * sx
-	self.scaleY = self.scaleY * (sy or sx)
+	if math.clamp(self.scaleX * sx, 0.8, 1.2) == self.scaleX * sx then
+		self.scaleX = math.clamp(self.scaleX * sx, 0.8, 1.2)
+		self.scaleY = math.clamp(self.scaleY * (sy or sx), 0.8, 1.2)
+		self._x = self._x*sx
+	else
+		self.scaleX = math.clamp(self.scaleX * sx, 0.8, 1.2)
+		self.scaleY = math.clamp(self.scaleY * (sy or sx), 0.8, 1.2)
+	end
+	--self._y = self._y/sy
 end
  
 function camera:setX(value)
@@ -53,6 +64,7 @@ function camera:setPosition(x, y)
 end
  
 function camera:setScale(sx, sy)
+	self._x = self._x*(sx/self.scaleX)
 	self.scaleX = sx or self.scaleX
 	self.scaleY = sy or self.scaleY
 end

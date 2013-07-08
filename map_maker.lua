@@ -9,7 +9,7 @@ end
 --grid[2][4] = 2
 --grid[6][5] = 2
 
-local grass = love.graphics.newImage("grass4.png")
+local grass = love.graphics.newImage("grass.png")
 local highlight = love.graphics.newImage("highlight.png")
 local block_width = grass:getWidth()
 local block_height = grass:getHeight()
@@ -30,16 +30,18 @@ function ConvertFromIso(isoX,isoY)
 	return cartX, cartY
 end
 
+function Bounds()
+	local width = love.graphics.getWidth()
+	local height = love.graphics.getHeight()
+	camera:setBounds(-width, -height, width, height)
+end
+hook.Add("load","Bounds",Bounds)
 
-
-
-
-local width = love.graphics.getWidth()
-local height = love.graphics.getHeight()
-camera:setBounds(0, 0, width, height)
 
 local function Grid()	
 	--love.graphics.draw(background)
+	love.graphics.printf(camera.scaleX, 10, 10, 10 ,"left")
+	
 	camera:set()
 	for x = 1,grid_size do
 		for y = 1,grid_size do
@@ -53,6 +55,12 @@ local function Grid()
 				--love.graphics.printf(x..","..y, x1+block_width/2, y1+block_depth/2, 1 ,"center")
 			end
 		end
+	end
+	if RTS.unit["soldier_1"] then
+		--print("drawing")
+		local x,y = 10,10
+		local x1,y1 = ConvertToIso((x * block_width/2), (y * (block_depth)))
+		RTS.unit["soldier_1"]:draw(grid_x + x1, grid_y + y1)
 	end
 	camera:unset()
 end
@@ -74,20 +82,31 @@ local function MoveGrid(dt)
 end
 hook.Add("update","MoveGrid",MoveGrid)
 
+local highlighted = {}
+
 local function Hover(dt)	
 	local x, y = camera:mousePosition()
 	x, y = ConvertFromIso(x, y)
 	x, y = round(x / block_width*2), round(y / (block_depth))
 	x = x-1
-	for x = 1,grid_size do
-		for y = 1,grid_size do
-			if grid[x][y] == 2 then
-				grid[x][y]=1
-			end
-		end
+	if highlighted.x then
+		grid[highlighted.x][highlighted.y] = 1
 	end
 	if grid[x] and grid[x][y] then
 		grid[x][y] = 2
+		highlighted.x, highlighted.y = x, y
 	end
 end
 hook.Add("update","Hover",Hover)
+
+
+local function Zoom(x,y,key)	
+	if key == "wu" then
+		camera:scale(0.9, 0.9)
+	elseif key == "wd" then
+		camera:scale(1.1, 1.1)
+	elseif key == "m" then
+		camera:setScale(1, 1)
+	end
+end
+hook.Add("mousepressed","Zoom",Zoom)

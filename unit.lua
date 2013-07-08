@@ -15,11 +15,15 @@ local unit = {}
 function unit.new(self, unit)
     if unit then
 		local t = setmetatable(unit, getmetatable(RTS.unit))
-		table.insert(RTS.unit, t)
+		RTS.unit[unit.uniquename] = t
 		return t
 	else
 		return false
 	end
+end
+
+function unit.draw(self, x, y)
+	love.graphics.draw(self.image, x, y)
 end
 
 unit.__index=unit
