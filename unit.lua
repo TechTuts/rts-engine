@@ -1,4 +1,15 @@
 RTS.unit = {}
+
+function RTS.unit:init()
+	local units = loveframes.util.GetDirectoryContents("units")
+	
+	for k, v in ipairs(units) do
+		if v.extension == "lua" then
+			require(v.requirepath)
+		end
+	end
+end
+
 local unit = {}
 
 function unit.new(self, unit)
