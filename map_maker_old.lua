@@ -18,10 +18,22 @@ local block_depth = block_height
 local grid_x = 0--64*grid_size/2
 local grid_y = 0
 
+function ConvertToIso(cartX,cartY)
+	isoX = cartX - cartY;
+	isoY = (cartX + cartY) / 2;
+	return isoX, isoY
+end
+
+function ConvertFromIso(isoX,isoY)
+	cartX = (2 * isoY + isoX) / 2;
+	cartY = (2 * isoY - isoX) / 2;
+	return cartX, cartY
+end
+
 function Bounds()
 	local width = love.graphics.getWidth()
 	local height = love.graphics.getHeight()
-	camera:setBounds(0, 0, block_width*grid_size, block_width*grid_size)
+	camera:setBounds(-width, -height, width, height)
 end
 hook.Add("load","Bounds",Bounds)
 
@@ -34,15 +46,21 @@ local function Grid()
 	for x = 1,grid_size do
 		for y = 1,grid_size do
 			if grid[x][y] == 1 then
-				local x1,y1 = x * block_width, y * block_depth
+				local x1,y1 = ConvertToIso((x * block_width/2), (y * (block_depth)))
 				love.graphics.draw(grass, grid_x + x1, grid_y + y1)
 				--love.graphics.printf(x..","..y, x1+block_width/2, y1+block_depth/2, 1 ,"center")
 			elseif grid[x][y] == 2 then
-				local x1,y1 = x * block_width, y * block_depth
+				local x1,y1 = ConvertToIso((x * block_width/2), (y * (block_depth)))
 				love.graphics.draw(highlight, grid_x + x1, grid_y + y1)
 				--love.graphics.printf(x..","..y, x1+block_width/2, y1+block_depth/2, 1 ,"center")
 			end
 		end
+	end
+	if RTS.unit["soldier_1"] then
+		--print("drawing")
+		local x,y = 10,10
+		local x1,y1 = ConvertToIso((x * block_width/2), (y * (block_depth)))
+		RTS.unit["soldier_1"]:draw(grid_x + x1, grid_y + y1)
 	end
 	camera:unset()
 end
@@ -68,8 +86,9 @@ local highlighted = {}
 
 local function Hover(dt)	
 	local x, y = camera:mousePosition()
-	x, y = math.floor(x / block_width), math.floor(y / block_depth)
-	--x = x-1
+	x, y = ConvertFromIso(x, y)
+	x, y = round(x / block_width*2), round(y / (block_depth))
+	x = x-1
 	if highlighted.x then
 		grid[highlighted.x][highlighted.y] = 1
 	end
