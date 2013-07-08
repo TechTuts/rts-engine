@@ -2,6 +2,7 @@ RTS = {}
 
 require("hook")
 require("functions")
+require("state")
 require("camera")
 require("resource")
 require("map")

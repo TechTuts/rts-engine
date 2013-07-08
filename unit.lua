@@ -22,13 +22,8 @@ function unit.new(self, unit)
 	end
 end
 
-function unit.print(self)
-	print(self.name)
-end
-
 unit.__index=unit
 
 setmetatable(RTS.unit, unit)
-
 
 RTS.unit:init()
