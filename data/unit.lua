@@ -1,4 +1,5 @@
 RTS.unit = {}
+RTS.unit.active = {}
 
 function RTS.unit:init()
 	local units = GetDirectoryContents("units")
@@ -7,6 +8,23 @@ function RTS.unit:init()
 		if v.extension == "lua" then
 			require(v.requirepath)
 		end
+	end
+end
+
+function RTS.unit:create( uid, groupsize, team, x, y, runtox, runtoy )
+	if not RTS.unit.active[team] then RTS.unit.active[team] = {} end
+	if runtox then
+	else
+		local health = {}
+		local 
+		for i=1, groupsize do
+			health[i] = 100
+			pos[i] = {x = x, y = y}
+		end
+		local t = {gridx = x, gridy = y, state = "still", uid = uid, groupsize = groupsize, health = health, pos = {} }
+		table.insert(RTS.unit.active[team], t)
+		if not RTS.Grid[x][y][team] then RTS.Grid[x][y][team] = {} end
+		table.insert(RTS.Grid[x][y][team], t)
 	end
 end
 
